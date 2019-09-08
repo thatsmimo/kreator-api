@@ -1,7 +1,7 @@
 {
   "development": {
-    "username": "debian-sys-maint",
-    "password": "9wUHko34BaR26qRG",
+    "username": "root",
+    "password": "",
     "database": "kreator_dev",
     "host": "127.0.0.1",
     "dialect": "mysql"
