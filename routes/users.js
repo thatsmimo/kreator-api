@@ -114,4 +114,44 @@ router.post('/checking', function(req, res, next) {
 });
 
 
+/* POST change password   */
+router.post('/changePassword', function (req, res){
+  var payload = req.body
+  console.log("data", req.body)
+  Models.User.findOne({
+    where: {
+      id : payload.userId
+    }
+  })
+  .then( function(data) {
+    bcrypt.compare(payload.oldPassword, data.dataValues.password, function(err, response) {
+      if(response == true) {
+        bcrypt.hash(payload.newPassword, saltRounds, function(err, hash) {
+          payload.newPassword = hash; 
+          Models.User.find({ where: { id: payload.userId } })
+          .on('success', function (data) {
+            // Check if record exists in db
+            if (data) {
+              data.update({ password: payload.newPassword })
+              .success(function () {
+                var responseData = {
+                  ack : 1,
+                  msg : 'Password changed successfully'
+                };
+                res.send(responseData);
+              })
+            }
+          })
+        });
+      } else {
+        var responseData = {
+          ack : 0,
+          msg : 'Password did not match with old password'
+        };
+        res.send(responseData);
+      }
+    });
+  })
+})
+
 module.exports = router;
