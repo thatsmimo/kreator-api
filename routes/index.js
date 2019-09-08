@@ -9,7 +9,7 @@ router.get('/', function(req, res, next) {
       model: Models.UserImages,
   }]
   }).then(users => {
-    console.log("All users:", JSON.stringify(users, null, 4));
+    console.log("All users:", users);
     res.send(users);
   });
 });
