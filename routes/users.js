@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const Models = require('../models');
-const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const saltRounds = 15;
+const bcrypt = require('bcrypt');
+const AuthCheck= require('./helper');
+
+const saltRounds = 10;
 
 
 /* POST users sign up. */
@@ -56,7 +58,7 @@ router.post('/login', function(req, res) {
 
           // create a token
           var token = jwt.sign({ id: data.dataValues.id }, 'thatsmimo', {
-            expiresIn: 86400 // expires in 24 hours
+            expiresIn: 42000000000 // expires in 24 hours
           });
           console.log(token)
           var responseData = {
@@ -91,9 +93,25 @@ router.post('/login', function(req, res) {
 router.post('/token', function(req, res, next) {
   console.log('token=>',req.body.token)
   jwt.verify(req.body.token, 'thatsmimo', function(err, decoded) {
-    if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+    if (err) {
+      return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+   }else{
+    res.send('success');
+   }
   });
-  res.send('success')
+  // res.send('success');
 });
+
+
+router.post('/checking', function(req, res, next) {
+  // console.log('token=>',AuthCheck.checkMe(req.body.token))
+  if(AuthCheck.checkMe(req.body.token)){
+    res.send('success');
+  }else{
+    res.send('fail');
+  }
+   
+});
+
 
 module.exports = router;
