@@ -43,7 +43,6 @@ router.post('/signUp', function(req, res) {
 
 
 
-
 /* POST users sign in.*/
 router.post('/login', function(req, res) {
   var payload = req.body;
