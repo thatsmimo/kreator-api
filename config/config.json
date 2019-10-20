@@ -4,20 +4,38 @@
     "password": "admin",
     "database": "kreator_dev",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "dialectOptions": {
+      "dateStrings": true,
+      "typeCast": true,
+      "timezone": "+05:30"
+    },
+    "timezone": "+05:30"
   },
   "test": {
     "username": "debian-sys-maint",
     "password": "9wUHko34BaR26qRG",
     "database": "kreator_test",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "dialectOptions": {
+      "dateStrings": true,
+      "typeCast": true,
+      "timezone": "+05:30"
+    },
+    "timezone": "+05:30"
   },
   "production": {
     "username": "debian-sys-maint",
     "password": "9wUHko34BaR26qRG",
     "database": "kreator_prod",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "dialectOptions": {
+      "dateStrings": true,
+      "typeCast": true,
+      "timezone": "+05:30"
+    },
+    "timezone": "+05:30"
   }
 }
