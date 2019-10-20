@@ -7,6 +7,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 
+
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const postRouter = require('./routes/post');
@@ -32,6 +33,7 @@ app.use(morgan('combined'));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public/files'));
 app.use(cookieParser());
 
 
@@ -68,7 +70,8 @@ io.on('connection', function(client) {
   });
 
   client.on('messages', function(data) {
-    client.emit('messages', data);
+    console.log(data);
+    client.emit('message' + data.receiverId, data);
   });
 });
 
