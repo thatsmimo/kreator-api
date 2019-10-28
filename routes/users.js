@@ -3,7 +3,8 @@ const router = express.Router();
 const Models = require('../models');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const AuthCheck= require('./helper');
+const AuthCheck = require('./helper');
+const helper = require('./helper')
 
 const saltRounds = 10;
 
@@ -19,10 +20,16 @@ router.post('/signUp', function(req, res) {
           username : payload.username,
           email : payload.email,
           password : payload.password ,
-          address : payload.address
+          address : payload.address,
+          firstName : payload.firstName,
+          lastName : payload.lastName,
+          active : 0
         };
 
         Models.User.create(entryData).then(data => {
+          let otp = Math.floor(100000 + Math.random() * 900000);
+          Models.otp.create({userId : data.id, otp : otp});
+          helper.sendMail(data.email, 'Kreator SignUp Otp', 'Your signup otp is '+otp, );
           var responseData = {
             userData : data.dataValues,
             ack : 1,
@@ -151,6 +158,42 @@ router.post('/changePassword', function (req, res){
       }
     });
   })
+});
+
+
+router.post('/otp', async (req, res) => {
+  var payload = req.body
+  console.log(payload);
+  try {
+    let response = await Models.otp.findOne({
+      where : {userId : payload.userId}
+    });
+    if (response.dataValues == payload.otp) {
+      Models.User.update(
+        {active : 1},
+        {where : {id : payload.userId}}
+      )
+      var responseData = {
+        ack : 1,
+        msg : 'Otp Confirmed'
+      };
+      res.send(responseData);
+    } else {
+      var responseData = {
+        ack : 0,
+        msg : 'Otp did not match'
+      };
+      res.send(responseData);
+    }
+    console.log(response);
+  } catch (e) {
+    var responseData = {
+      ack : 0,
+      msg : 'Otp did not match',
+      devMsg : e
+    };
+    res.send(responseData);
+  }
 })
 
 module.exports = router;
