@@ -56,7 +56,13 @@ router.post('/login', function(req, res) {
   Models.User.findOne({
     where: {
       email : payload.email
-    }
+    },
+    include: [
+      {
+        model: Models.UserImages,
+        as: 'Image',
+      },
+    ]
   }).then(data => {
     if(data != null) {
       bcrypt.compare(payload.password, data.dataValues.password, function(err, response) {
@@ -168,14 +174,25 @@ router.post('/otp', async (req, res) => {
     let response = await Models.otp.findOne({
       where : {userId : payload.userId}
     });
-    if (response.dataValues == payload.otp) {
+    console.log(response.dataValues)
+    if (parseInt(response.dataValues.otp) == payload.otp) {
       Models.User.update(
         {active : 1},
         {where : {id : payload.userId}}
       )
+      let user = await Models.User.findOne({
+        where : {id : payload.userId},
+        include: [
+          {
+            model: Models.UserImages,
+            as: 'Image',
+          },
+        ]
+      });
       var responseData = {
-        ack : 1,
-        msg : 'Otp Confirmed'
+        ack: 1,
+        msg: 'Otp Confirmed',
+        data: user.dataValues,
       };
       res.send(responseData);
     } else {
