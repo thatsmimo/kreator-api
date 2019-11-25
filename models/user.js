@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
     profileImage: DataTypes.INTEGER,
     address:DataTypes.STRING,
     email:DataTypes.STRING,
+    location:DataTypes.STRING,
+    title:DataTypes.STRING,
+    bio:DataTypes.TEXT,
+    website:DataTypes.STRING
   }, {
     
   });

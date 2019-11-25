@@ -92,7 +92,13 @@ router.post('/list', async (req, res) => {
         {
           model: Models.postLike,
           as : 'totalLike',
-          attributes: []
+          include: [
+            {
+              model: Models.User,
+              as: 'User',
+              attributes: ['firstName', 'lastName', 'profileImage', 'id', 'email'],
+            }
+          ]
         },
         {
           model: Models.postComment,
@@ -207,6 +213,60 @@ router.post('/details', async (req, res) => {
     res.send(responseData);
     console.log(e)
   }
-})
+});
+
+
+/*
+* Post like
+*/
+router.post('/like', async (req, res) => {
+  var payload = req.body;
+  console.log(req)
+  try {
+    var response = await Models.postLike.create(payload);
+    console.log(response);
+    let responseData = {
+      ack: 1,
+      msg: 'Liked successfully',
+      data: response.dataValues,
+    };
+    res.send(responseData);
+  } catch(e) {
+    let responseData = {
+      ack: 0,
+      msg: 'unable to like',
+      devMsg: e
+    };
+    res.send(responseData);
+    console.log(e)
+  }
+});
+
+
+/*
+* Post Comment
+*/
+router.post('/comment', async (req, res) => {
+  var payload = req.body;
+  console.log(req)
+  try {
+    var response = await Models.postComment.create(payload);
+    console.log(response);
+    let responseData = {
+      ack: 1,
+      msg: 'Commented successfully',
+      data: response.dataValues,
+    };
+    res.send(responseData);
+  } catch(e) {
+    let responseData = {
+      ack: 0,
+      msg: 'unable to comment',
+      devMsg: e
+    };
+    res.send(responseData);
+    console.log(e)
+  }
+});
 
 module.exports = router;
