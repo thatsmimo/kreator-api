@@ -5,8 +5,21 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const AuthCheck = require('./helper');
 const helper = require('./helper')
+const Models = require('../models');
 
 const saltRounds = 10;
+
+
+const storage =   multer.diskStorage({
+  destination: function (req, file, callback) {
+    callback(null, './public/files');
+  },
+  filename: function (req, file, callback) {
+    let extension = file.mimetype.split('/')
+    callback(null, file.fieldname + '-' + Date.now()+'.'+extension[1]);
+  }
+});
+var upload = multer({ storage : storage });
 
 
 /* POST users sign up. */
@@ -61,6 +74,10 @@ router.post('/login', function (req, res) {
       {
         model: Models.UserImages,
         as: 'Image',
+      },
+      {
+        model: Models.educations,
+        as: 'Educations',
       },
     ]
   }).then(data => {
@@ -236,5 +253,16 @@ router.post('/profile/edit', async (req, res) => {
     res.send(response);
   }
 });
+
+
+/*
+change profile picture
+*/
+router.use('/changeProfiePicture', upload.single('pic'), async (req, res) => {
+  var payload = req.body;
+  console.log(req);
+})
+
+
 
 module.exports = router;
