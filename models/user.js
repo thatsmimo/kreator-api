@@ -21,6 +21,9 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.UserImages,{
       as : 'Image',
     });
+    User.hasMany(models.educations,{
+      as : 'Educations',
+    });
   };
   return User;
 };
