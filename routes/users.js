@@ -3,12 +3,11 @@ const router = express.Router();
 const Models = require('../models');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const AuthCheck = require('./helper');
-const helper = require('./helper')
-const Models = require('../models');
+const multer  =   require('multer');
+const helper = require('./helper');
+
 
 const saltRounds = 10;
-
 
 const storage =   multer.diskStorage({
   destination: function (req, file, callback) {
